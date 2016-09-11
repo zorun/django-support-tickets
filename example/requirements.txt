@@ -1,0 +1,5 @@
+# The app requirements.
+-r ../requirements_dev.txt
+
+# The app in editable mode.
+-e ../

@@ -1,0 +1,103 @@
+{% extends "support_tickets/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load markup_tags %}
+
+{% block head_title %}{% trans "Tickets list" %}{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2>#{{ ticket.pk }}: {{ ticket.subject }}</h2>
+
+            <small>{% trans "Created" %}: {{ ticket.created }}</small>
+            <small>{% trans "Updated" %}: {{ ticket.last_active }}</small>
+          </div>
+          <div class="panel-body">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{% trans "Agent" %}</th>
+                  <th>{% trans "Category" %}</th>
+                  <th>{% trans "Status" %}</th>
+                  <th>{% trans "Priority" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ ticket.agent }}</td>
+                  <td>{{ ticket.category }}</td>
+                  <td>{{ ticket.get_status_display }}</td>
+                  <td>{{ ticket.get_priority_display }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+        <section class="col-md-8 col-md-offset-2">
+          {% for comment in comments_list %}
+            <div class="row">
+                <div class="col-md-3 text-center">
+                  <img class="img-thumbnail"
+                       alt="avatar"
+                       src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzE0MHgxNDAKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTVmNDM3MjI0MCB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1NWY0MzcyMjQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA1NDY4NzUiIHk9Ijc0LjUiPjE0MHgxNDA8L3RleHQ+PC9nPjwvZz48L3N2Zz4="
+                       style="width: 80px; height: 80px;">
+                  <div>{{ comment.user }}</div>
+                </div>
+                <div class="panel panel-default col-md-9">
+                  <div class="panel-body">
+                    Posted on: {{ comment.created }}
+                    <hr>
+                    {{ comment.description | apply_markup:comment.markup }}
+
+                    {% if comment.attachments.all %}
+                      <hr>
+                      {% trans "Attachments" %}:
+
+                      <ul>
+                      {% for attachment in comment.attachments.all %}
+                        <li>
+                          <a href="{{ attachment.file.url }}">
+                            {{ attachment.file_name }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                </div>
+            </div>
+          {% endfor %}
+        </section>
+
+        {% if not ticket.is_closed %}
+        <section class="col-md-8 col-md-offset-2" id="new-message-form">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              New message
+            </div>
+            <div class="panel-body">
+              <form class="markup" method="post" action="./#new-message-form" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form|crispy }}
+
+                <button class="btn btn-success btn-block" type="submit">{% trans "Send message" %}</button>
+              </form>
+            </div>
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
