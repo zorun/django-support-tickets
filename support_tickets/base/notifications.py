@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from utils import send_email
+from .utils import send_email
 
 
 def send_agent_ticket_creation_email(request, ticket):
