@@ -1,6 +1,6 @@
 Hello, {{ submitter.first_name }}
 
-Your ticket #{{ ticket.pk }} was reopen.
+Your ticket #{{ ticket.pk }} was reopened.
 
 http://{{ website_domain }}{% url 'tickets:ticket_detail' ticket.pk %}.
 

@@ -54,7 +54,7 @@ def send_client_ticket_closing_email(request, ticket):
 def send_client_ticket_reopening_email(request, ticket):
     send_email(
         request,
-        _("Your ticket #%s was reopen") % (ticket.pk),
+        _("Your ticket #%s was reopened") % (ticket.pk),
         ticket.agent.email,
         settings.DEFAULT_FROM_EMAIL,
         {
