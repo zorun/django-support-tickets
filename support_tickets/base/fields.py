@@ -5,7 +5,7 @@ from slugify import slugify
 
 
 def custom_slugify(value):
-    return slugify(value).decode('ascii')
+    return slugify(value, only_ascii=True)
 
 
 class CustomAutoSlugField(AutoSlugField):
