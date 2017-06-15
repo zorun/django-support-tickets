@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+import io
 
 try:
     from setuptools import setup
